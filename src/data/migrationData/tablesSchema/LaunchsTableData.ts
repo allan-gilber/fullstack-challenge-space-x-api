@@ -68,16 +68,12 @@ export default class LaunchsTableData extends DataBase {
 
     try {
       const arrayOfPromises = launchsData.map(async (data: any) => {
-        console.log('insertingg');
         return await this.connection().table('launchs').insert(data);
       });
-      console.log('promises31', arrayOfPromises.lenght);
       await Promise.allSettled(arrayOfPromises)
         .then(arrayOfPromises => {
-          console.log('lenght:', arrayOfPromises);
           arrayOfPromises.forEach(
             (promise: any ) => {
-              console.log('rejected', promise.status);
               if (promise?.status === 'rejected') return arrayOfResults.push(promise.reason.sqlMessage);
             });
         });

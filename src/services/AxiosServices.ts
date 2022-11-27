@@ -28,10 +28,8 @@ export class AxiosServices {
   private requestAlLLaunchData = async () => {
     const arrayOfPromisses: any[] = [];
     do {
-      console.log('rodou', this.loopControler, this.actualPage, this.totalPages, this.actualPage > this.totalPages);
       // eslint-disable-next-line no-await-in-loop
       const responseData: any = await this.getBlockOfLaunchData();
-      console.log('nextpage3:', responseData.hasNextPage);
       arrayOfPromisses.push(responseData);
       this.actualPage++;
     } while (this.loopControler);
@@ -46,11 +44,9 @@ export class AxiosServices {
       }
     };
     const axiosRequest: any = await axios.post(`${this.BASE_URL}launches/query`, body);
-    console.log('axiosRequest', axiosRequest.data.hasNextPage, axiosRequest.data.totalPages);
     if (this.totalPages === 0) this.totalPages = axiosRequest.data.totalPages;
     if (!axiosRequest.data.hasNextPage || this.actualPage > this.totalPages) this.loopControler = false;
 
-    console.log('size:', axiosRequest.data.docs.length);
     const arrayOfPromisses: Promise<[]>[]= await axiosRequest.data.docs.map(async (launch: any) => {
       const parsers = new DatabaseParser();
 

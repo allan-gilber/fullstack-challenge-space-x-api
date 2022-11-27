@@ -1,4 +1,4 @@
-import LaunchsTableData from '../../data/migrationData/tablesSchema/LaunchsTableData';
+import LaunchesTableData from '../../data/migrationData/tablesSchema/LaunchesTableData';
 import RocketsTableData from '../../data/migrationData/tablesSchema/RocketsTableData';
 
 
@@ -7,7 +7,7 @@ export default class PopulationBusiness {
     return await new RocketsTableData().populateRocketsTable();
   }
 
-  public async populateLaunchsTable(){
-    return new LaunchsTableData().populateLaunchsTable();
+  public async populateLaunchesTable(){
+    return new LaunchesTableData().populateLaunchesTable();
   }
 }

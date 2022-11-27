@@ -1,4 +1,4 @@
-import LaunchsTableData from '../../data/migrationData/tablesSchema/LaunchsTableData';
+import LaunchesTableData from '../../data/migrationData/tablesSchema/LaunchesTableData';
 import RocketsTableData from '../../data/migrationData/tablesSchema/RocketsTableData';
 
 export default class TableSchemaBusiness {
@@ -6,7 +6,7 @@ export default class TableSchemaBusiness {
     return await new RocketsTableData().createRocketsTable();
   }
 
-  public async createLaunchsTableSchema(){
-    return await new LaunchsTableData().createLaunchsTable();
+  public async createLaunchesTableSchema(){
+    return await new LaunchesTableData().createLaunchesTable();
   }
 }

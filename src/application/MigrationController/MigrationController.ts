@@ -11,7 +11,7 @@ export class MigrationController extends DataBase {
       // Creating Table Schema
       const tableSchemaBuilder = new TableSchemaBusiness();
       await tableSchemaBuilder.createRocketsTableSchema();
-      await tableSchemaBuilder.createLaunchsTableSchema();
+      await tableSchemaBuilder.createLaunchesTableSchema();
       console.log('Fnished table Schema creation.');
 
 
@@ -21,19 +21,19 @@ export class MigrationController extends DataBase {
         .then(async result => {
           if (result === 'partial'){console.log('Finished populating rockets table with some errors.');}
           else {console.log('Finished populating table "rockets"!');}
-          return await populator.populateLaunchsTable();
+          return await populator.populateLaunchesTable();
         })
         .then(result => {
-          if (result === 'partial'){console.log('Finished populating launchs table with some errors.');}
-          else {console.log('Finished populating table "launchs"!');}
+          if (result === 'partial'){console.log('Finished populating launches table with some errors.');}
+          else {console.log('Finished populating table "launches"!');}
 
           console.log('Finished all tables populators!');
           process.exit();
         });
     } catch (error: any){
-      const messageCotroller = new MessageErrorsController();
-      if (error?.code === 'ER_DUP_ENTRY') return console.log(`Error in PopulationBusiness: ${error.sqlMessage}\n`, messageCotroller.getErrorMessage('ER_DUP_ENTRY_FOR_POPULATING_ROCKETS_TABLE').message);
-      console.log('Error in MigrationController: ', messageCotroller.getErrorMessage(error.code).message);
+      const messageController = new MessageErrorsController();
+      if (error?.code === 'ER_DUP_ENTRY') return console.log(`Error in PopulationBusiness: ${error.sqlMessage}\n`, messageController.getErrorMessage('ER_DUP_ENTRY_FOR_POPULATING_ROCKETS_TABLE').message);
+      console.log('Error in MigrationController: ', messageController.getErrorMessage(error.code).message);
       process.exit();
     } finally {
       this.closeConnection();

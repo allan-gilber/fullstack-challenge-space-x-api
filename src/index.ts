@@ -1,5 +1,6 @@
 import {Request, Response} from 'express';
-import app from './business/applicationBusiness/ApplicationLogic';
+import app from './business/applicationBusiness/applicationLogic';
 
-
-app.get('/', (req: Request,res: Response) => res.status(200).send({message: 'hello world!'}));
+// GET
+/* Simple endpoint to verify if server is online */
+app.get('/', (req: Request,res: Response) => res.status(200).send({message: 'Fullstack Challenge 🏅 - Space X API'}));

@@ -111,6 +111,7 @@
         "arrow-parens": [
             "error",
             "as-needed"
-        ]
+        ],
+        "@typescript-eslint/no-var-requires": "warn"
     }
 }

@@ -7,7 +7,7 @@ export class AxiosServices {
   private totalPages = 0;
   private LIMIT = 25;
   private actualPage = 0;
-  private loopControler = true;
+  private loopController = true;
 
   public async getRocketsData(): Promise<rocketDataInfo[] | []>{
     return await axios.get(`${this.BASE_URL}rockets`).then((response: any) => {
@@ -20,22 +20,20 @@ export class AxiosServices {
     });
   }
 
-  public async getLaunchsData(): Promise<any[] | []>{
+  public async getLaunchesData(): Promise<any[] | []>{
     const requestData = await this.requestAlLLaunchData();
     return requestData;
   }
 
   private requestAlLLaunchData = async () => {
-    const arrayOfPromisses: any[] = [];
+    const arrayOfPromises: any[] = [];
     do {
-      console.log('rodou', this.loopControler, this.actualPage, this.totalPages, this.actualPage > this.totalPages);
       // eslint-disable-next-line no-await-in-loop
       const responseData: any = await this.getBlockOfLaunchData();
-      console.log('nextpage3:', responseData.hasNextPage);
-      arrayOfPromisses.push(responseData);
+      arrayOfPromises.push(responseData);
       this.actualPage++;
-    } while (this.loopControler);
-    return Promise.all(arrayOfPromisses.map(promise => promise));
+    } while (this.loopController);
+    return Promise.all(arrayOfPromises.map(promise => promise));
   };
 
   private async getBlockOfLaunchData(){
@@ -46,12 +44,10 @@ export class AxiosServices {
       }
     };
     const axiosRequest: any = await axios.post(`${this.BASE_URL}launches/query`, body);
-    console.log('axiosRequest', axiosRequest.data.hasNextPage, axiosRequest.data.totalPages);
     if (this.totalPages === 0) this.totalPages = axiosRequest.data.totalPages;
-    if (!axiosRequest.data.hasNextPage || this.actualPage > this.totalPages) this.loopControler = false;
+    if (!axiosRequest.data.hasNextPage || this.actualPage > this.totalPages) this.loopController = false;
 
-    console.log('size:', axiosRequest.data.docs.length);
-    const arrayOfPromisses: Promise<[]>[]= await axiosRequest.data.docs.map(async (launch: any) => {
+    const arrayOfPromises: Promise<[]>[]= await axiosRequest.data.docs.map(async (launch: any) => {
       const parsers = new DatabaseParser();
 
       launch = await  parsers.launchDataPropertyNameHandler(launch);
@@ -61,6 +57,6 @@ export class AxiosServices {
       return launch;
     });
 
-    return await Promise.all(arrayOfPromisses.map(promise => promise));
+    return await Promise.all(arrayOfPromises.map(promise => promise));
   }
 }

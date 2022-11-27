@@ -5,5 +5,5 @@ export interface errorMessage {
     message: string
 }
 export interface externalErrorMessage extends errorMessage{
-    status: number
+    status?: number
 }

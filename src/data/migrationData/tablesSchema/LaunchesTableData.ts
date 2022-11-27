@@ -3,18 +3,18 @@ import MessageErrorsController from '../../../application/MessageErrorsControlle
 import {AxiosServices} from '../../../services/AxiosServices';
 
 
-export default class LaunchsTableData extends DataBase {
+export default class LaunchesTableData extends DataBase {
 
   private failedInsertsArray: string[] = [];
 
-  public async createLaunchsTable(){
+  public async createLaunchesTable(){
     const boolean = [false, true];
     try {
-      return this.connection().schema.hasTable('launchs')
+      return this.connection().schema.hasTable('launches')
         .then((response: any) => {
-          if (response === true) return console.log( new MessageErrorsController().getErrorMessage('LAUNCHS_TABLE_ALREADY_EXISTS').message);
+          if (response === true) return console.log( new MessageErrorsController().getErrorMessage('LAUNCHES_TABLE_ALREADY_EXISTS').message);
 
-          return this.connection().schema.createTable('launchs', (table: any) => {
+          return this.connection().schema.createTable('launches', (table: any) => {
             table.string('launch_id').primary();
             table.string('launch_library_id');
             table.string('launch_rocket_id');
@@ -33,7 +33,7 @@ export default class LaunchsTableData extends DataBase {
             table.string('payloads', 2000);
             table.string('launchpad');
             table.integer('flight_number');
-            table.string('launch_misson_name');
+            table.string('launch_mission_name');
             table.string('date_utc');
             table.string('date_unix');
             table.string('date_local');
@@ -43,18 +43,18 @@ export default class LaunchsTableData extends DataBase {
             table.enu('auto_update', boolean);
             table.enu('tbd', boolean);
           })
-            .then(() => console.log('Table "launchs" successful created!'));
+            .then(() => console.log('Table "launches" successful created!'));
         });
     }
     catch (error: any){
-      throw `Error in createLaunchsTable: ${error?.code || error?.message}`;
+      throw `Error in createLaunchesTable: ${error?.code || error?.message}`;
     }
   }
 
-  public async populateLaunchsTable() {
-    const launchData = await new AxiosServices().getLaunchsData();
-    if (!launchData) return new MessageErrorsController().getErrorMessage('EMPTY_RESPONSE_FOR_LAUNCHS_DATA_GRAB');
-    return await this.insertNewLaunchs(launchData)
+  public async populateLaunchesTable() {
+    const launchData = await new AxiosServices().getLaunchesData();
+    if (!launchData) return new MessageErrorsController().getErrorMessage('EMPTY_RESPONSE_FOR_LAUNCHES_DATA_GRAB');
+    return await this.insertNewLaunches(launchData)
       .then((result: [] | string[]) => {
         if (result.length !== 0){
           console.log('Failure in inserting the following launch data: ', result);
@@ -63,27 +63,23 @@ export default class LaunchsTableData extends DataBase {
       });
   }
 
-  private async insertNewLaunchs(launchsData: any): Promise<string[] | []>{
+  private async insertNewLaunches(launchesData: any): Promise<string[] | []>{
     const arrayOfResults: string[] = [];
 
     try {
-      const arrayOfPromises = launchsData.map(async (data: any) => {
-        console.log('insertingg');
-        return await this.connection().table('launchs').insert(data);
+      const arrayOfPromises = launchesData.map(async (data: any) => {
+        return await this.connection().table('launches').insert(data);
       });
-      console.log('promises31', arrayOfPromises.lenght);
       await Promise.allSettled(arrayOfPromises)
         .then(arrayOfPromises => {
-          console.log('lenght:', arrayOfPromises);
           arrayOfPromises.forEach(
             (promise: any ) => {
-              console.log('rejected', promise.status);
               if (promise?.status === 'rejected') return arrayOfResults.push(promise.reason.sqlMessage);
             });
         });
     } catch (error: any){
       if (error?.code === 'ER_DUP_ENTRY') this.failedInsertsArray.push(error.sqlMessage);
-      console.log('Error inserting new launchs table data: ', error);
+      console.log('Error inserting new launches table data: ', error);
       throw 'genericError';
     }
     return arrayOfResults;

@@ -43,7 +43,6 @@ export default class RocketsTableData extends DataBase {
       const arrayOfPromises = rocketData.map(async rocketData => {
         return await this.connection().table('rockets').insert(rocketData);
       });
-      console.log('ddd33', arrayOfPromises.length);
       await Promise.allSettled(arrayOfPromises).then(arrayOfPromises => {
         arrayOfPromises.forEach(
           (promise: any ) => {

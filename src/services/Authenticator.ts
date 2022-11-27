@@ -36,7 +36,7 @@ export default class Authenticator {
       console.log('Please, configure the secret password for "admin" role creation');
       throw new Error('genericError');
     }
-    if (!(secretPassword === process.env.SECRET_PASS)) throw new Error('emptyParamtersForSignup');
+    if (!(secretPassword === process.env.SECRET_PASS)) throw new Error('emptyParametersForSignup');
     return;
   }
 }

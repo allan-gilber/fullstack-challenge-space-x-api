@@ -2,6 +2,7 @@ import knex, {Knex} from 'knex';
 import {config} from 'dotenv';
 
 
+/* It's a class that can connect to the database or closes the connection */
 export default class DataBase {
 
   protected connection(): Knex {

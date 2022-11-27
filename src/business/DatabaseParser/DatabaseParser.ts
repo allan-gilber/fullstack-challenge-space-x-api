@@ -4,7 +4,7 @@ export default class DatabaseParser {
     let temporaryObjArray: any;
     try {
       temporaryObjArray = arrayOfData;
-      const arrayOfPropertys: string[] = ['id,launch_id', 'rocket,launch_rocket_id', 'name, launch_misson_name'];
+      const arrayOfPropertys: string[] = ['id,launch_id', 'rocket,launch_rocket_id', 'name, launch_mission_name'];
 
       arrayOfPropertys.forEach((propertyNames: string) => {
         const arrayOfPropertyNamesToBeChanged: string[] = propertyNames.split(',');

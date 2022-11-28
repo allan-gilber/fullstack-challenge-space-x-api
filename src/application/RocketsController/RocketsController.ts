@@ -1,19 +1,22 @@
-import RocketsBusiness from '../../business/UserBusiness/UserBusiness';
+import RocketsBusiness from '../../business/RocketsBusiness/RocketsBusiness';
 import {Request, Response} from 'express';
 import DataBase from '../../services/DataBase';
 import MessageErrorsController from '../MessageErrorsController/MessageErrorsController';
 
-export class RocketsController extends DataBase {
-  async getRocketsList(resp: Response){
+export default class RocketsController extends DataBase {
+  async getRocketsList(response: Response){
     try {
-      const RocketsList = await new RocketsBusiness();
-      resp.statusCode = 200;
-      resp.send(RocketsList);
+      const RocketsList = await new RocketsBusiness().getRocketList();
+      response.statusCode = 200;
+      response.send(RocketsList);
     } catch (error: any){
-      const errorMessage = new MessageErrorsController().getErrorMessage(error?.code || error?.message);
-      resp.statusCode = errorMessage.status;
+      const messageController = new MessageErrorsController();
 
-      resp.send({message: errorMessage.message});
+      console.log('Error in getRocketsList: ', error?.code || error?.message || error);
+
+      const errorMessage = messageController.getErrorMessage(error?.code || error?.message || error);
+      response.status(errorMessage.status ? errorMessage.status : 500)
+        .send({message: errorMessage.message});
     } finally {
       this.closeConnection();
     }

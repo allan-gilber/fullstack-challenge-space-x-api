@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
 import LaunchesData from '../../data/LaunchesData/LaunchesData';
-import {launchesRequestParameters} from '../../models/launchesInfoModel';
+import {launchesRequestParameters, launchesStats} from '../../models/launchesInfoModel';
+import {rocketDataInfo} from '../../models/rocketsInfoModels';
 import DataValidatorBusiness from '../DataValidatorBusiness/DataValidatorBusiness';
 
 export default class LaunchesBusiness {
@@ -14,9 +15,8 @@ export default class LaunchesBusiness {
 
   public async getLaunchesList(request: Request){
     const dataValidator = new DataValidatorBusiness();
-    // const validateDataArray = dataValidator.checkIfStringHasOnlyNumbers(request.query);
-    if (request.query?.search) this.searchParameters = request.query.search.toString();
 
+    if (request.query?.search) this.searchParameters = request.query.search.toString();
     if (request.query?.limit){
       if (!dataValidator.checkIfStringHasOnlyNumbers(request.query.limit.toString()))  throw 'invalidParametersForLaunchesList';
       this.limit = Number(request.query.limit);
@@ -52,5 +52,26 @@ export default class LaunchesBusiness {
     };
 
     return response;
+  }
+
+  public async getLaunchesStatsSummary(arrayOfRocketsIds: rocketDataInfo[]){
+
+    const result = await Promise.all(arrayOfRocketsIds.map(async (rocketData: rocketDataInfo) => {
+      const response = await new LaunchesData().getTotalNumberOfSuccessfullyLaunchesByRocketId(rocketData.id);
+      rocketData.totalOfLaunches = response;
+      return rocketData;
+    }));
+    return result;
+  }
+
+  public async getLaunchesSuccessAndFailureStatsSummary(): Promise<launchesStats>{
+    const totalOfSuccessAndFailures = await new LaunchesData().getNumberOfSuccessfullyAndFailedLaunches();
+    const totalOfLaunches = await new LaunchesData().getTotalNumberOfLaunches();
+    return {success: totalOfSuccessAndFailures, failures: totalOfLaunches - totalOfSuccessAndFailures, total: totalOfLaunches};
+  }
+
+  public async getListOfYearAndRocketName(){
+    const totalOfSuccessAndFailures = await new LaunchesData().getListOfLaunchesByDate();
+    return totalOfSuccessAndFailures;
   }
 }

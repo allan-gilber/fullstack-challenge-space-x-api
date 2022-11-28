@@ -15,7 +15,7 @@ export default class DatabaseParser {
       return temporaryObjArray;
 
     } catch (error: any){
-      console.log('error in launchDataPropertyNameHandler:', error);
+      console.log('Error in launchDataPropertyNameHandler:', error);
 
       throw new Error('genericError');
     }
@@ -35,7 +35,7 @@ export default class DatabaseParser {
       return temporaryObjArray;
 
     } catch (error: any){
-      console.log('error in stringifyArraysFields:', error);
+      console.log('Error in stringifyArraysFields:', error);
 
       throw new Error('genericError');
     }
@@ -56,7 +56,7 @@ export default class DatabaseParser {
 
     } catch (error: any){
 
-      console.log('error in convertBooleanToString:', error);
+      console.log('Error in convertBooleanToString:', error);
 
       throw new Error('genericError');
     }

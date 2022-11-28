@@ -1,4 +1,5 @@
 export interface rocketDataInfo {
-    id: number,
-    name: string
+    id: string,
+    name: string,
+    totalOfLaunches?: number
 }

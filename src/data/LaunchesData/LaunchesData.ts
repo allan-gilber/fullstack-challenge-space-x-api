@@ -18,4 +18,21 @@ export default class LaunchesData extends DataBase {
       .count('launch_id as total');
     return totalOfLaunches[0].total;
   }
+
+  public async getTotalNumberOfSuccessfullyLaunchesByRocketId(rocketId: string): Promise<number>{
+    const request = await this.connection().table('launches')
+      .count('launch_id as total').where({'launch_rocket_id': rocketId});
+    return request[0].total;
+  }
+
+  public async getNumberOfSuccessfullyAndFailedLaunches():Promise<number>{
+    const request = await this.connection().table('launches')
+      .count('success as success').where({'success': 'true'});
+    return request[0].success;
+  }
+
+  public async getListOfLaunchesByDate() {
+    const request = await this.connection().table('launches').select('date_utc', 'rocket_name');
+    return request;
+  }
 }

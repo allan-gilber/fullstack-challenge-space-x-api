@@ -33,7 +33,7 @@ export class MigrationController extends DataBase {
     } catch (error: any){
       const messageController = new MessageErrorsController();
       if (error?.code === 'ER_DUP_ENTRY') return console.log(`Error in PopulationBusiness: ${error.sqlMessage}\n`, messageController.getErrorMessage('ER_DUP_ENTRY_FOR_POPULATING_ROCKETS_TABLE').message);
-      console.log('Error in MigrationController: ', messageController.getErrorMessage(error.code).message);
+      console.log('Error in MigrationController: ', error?.code || error?.message || error);
       process.exit();
     } finally {
       this.closeConnection();

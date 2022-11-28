@@ -4,3 +4,9 @@ export interface launchesRequestParameters {
     offSet: number,
     page: number
 }
+
+export interface launchesStats {
+    success: number,
+    failures: number,
+    total: number
+}

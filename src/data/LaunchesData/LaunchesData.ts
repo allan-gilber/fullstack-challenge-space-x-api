@@ -31,8 +31,13 @@ export default class LaunchesData extends DataBase {
     return request[0].success;
   }
 
-  public async getListOfLaunchesByDate() {
-    const request = await this.connection().table('launches').select('date_utc', 'rocket_name');
-    return request;
+  public async getListOfRocketsNames() {
+    return await this.connection().table('rockets')
+      .select('rocket_name', 'rocket_id');
+  }
+
+  public async getListOfLaunchesByDate(rocketId: string) {
+    return await this.connection().table('launches')
+      .select('launches.date_utc').where('launch_rocket_id', '=', rocketId);
   }
 }

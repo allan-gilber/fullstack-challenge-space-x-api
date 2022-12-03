@@ -1,37 +1,41 @@
 import {Request, Response} from 'express';
+import {promisify} from 'util';
 import LaunchesData from '../../data/LaunchesData/LaunchesData';
+import RocketsData from '../../data/RocketsData/RocketsData';
 import {launchesRequestParameters, launchesStats} from '../../models/launchesInfoModel';
 import {rocketDataInfo} from '../../models/rocketsInfoModels';
 import DataValidatorBusiness from '../DataValidatorBusiness/DataValidatorBusiness';
 
 export default class LaunchesBusiness {
-  private searchParameters = '';
-  private limit = 10;
-  private offSet = 0;
-  private page = 1;
-  private totalOfDocuments = 0;
-  private totalPages = 0;
-  private failedParameterVerificationsArray: string[] = [];
+
 
   public async getLaunchesList(request: Request){
+    let searchParameters = '';
+    let limit = 10;
+    const offSet = 0;
+    let page = 1;
+    let totalOfDocuments = 0;
+    let totalPages = 0;
+    const failedParameterVerificationsArray: string[] = [];
+
     const dataValidator = new DataValidatorBusiness();
 
-    if (request.query?.search) this.searchParameters = request.query.search.toString();
+    if (request.query?.search) searchParameters = request.query.search.toString();
     if (request.query?.limit){
       if (!dataValidator.checkIfStringHasOnlyNumbers(request.query.limit.toString()))  throw 'invalidParametersForLaunchesList';
-      this.limit = Number(request.query.limit);
+      limit = Number(request.query.limit);
     }
     if (request.query?.page) {
       if (!dataValidator.checkIfStringHasOnlyNumbers(request.query.page.toString())) throw 'invalidParametersForLaunchesList';
-      this.page = Number(request.query.page);
+      page = Number(request.query.page);
     }
-    if (this.failedParameterVerificationsArray.length !== 0) throw 'invalidParametersForLaunchesList';
+    if (failedParameterVerificationsArray.length !== 0) throw 'invalidParametersForLaunchesList';
 
     const searchArguments: launchesRequestParameters = {
-      limit: this.limit,
-      search: this.searchParameters,
-      offSet: this.offSet,
-      page: this.page
+      limit: limit,
+      search: searchParameters,
+      offSet: offSet,
+      page: page
     };
 
     const launchesList = await new LaunchesData().getLaunchesList(searchArguments);
@@ -39,16 +43,16 @@ export default class LaunchesBusiness {
 
     await Promise.all([launchesList, getTotalNumberOfLaunches]);
 
-    this.totalOfDocuments = getTotalNumberOfLaunches;
-    this.totalPages = Math.ceil(this.totalOfDocuments / this.limit);
+    totalOfDocuments = getTotalNumberOfLaunches;
+    totalPages = Math.ceil(totalOfDocuments / limit);
 
     const response = {
       results:launchesList,
-      totalDocs: this.totalOfDocuments,
-      page: this.page,
-      totalPages: this.totalPages,
-      hasNext: this.page < this.totalOfDocuments,
-      hasPrev: this.page !== 1
+      totalDocs: totalOfDocuments,
+      page: page,
+      totalPages: totalPages,
+      hasNext: page < totalOfDocuments,
+      hasPrev: page !== 1
     };
 
     return response;
@@ -71,7 +75,18 @@ export default class LaunchesBusiness {
   }
 
   public async getListOfYearAndRocketName(){
-    const totalOfSuccessAndFailures = await new LaunchesData().getListOfLaunchesByDate();
-    return totalOfSuccessAndFailures;
+    const listOfRockets = await new RocketsData().getRocketsList();
+    const arrayOfPromises: any[] = [];
+
+    listOfRockets.forEach(rocketData => {
+      const launchData = new LaunchesData().getListOfLaunchesByDate(rocketData.rocket_id);
+      arrayOfPromises.push(launchData);
+    });
+
+    const solvedPromises = await Promise.all(arrayOfPromises);
+
+    return listOfRockets.map((rocket, index) => {
+      return {name: rocket.rocket_name, launchData: solvedPromises[index]};
+    });
   }
 }

@@ -6,7 +6,6 @@ import DataBase from '../../../services/DataBase';
 export default class RocketsTableData extends DataBase {
   private failedInsertsArray: string[] = [];
 
-  // Rockets methods
   public async createRocketsTable(){
     try {
       return await this.connection().schema.hasTable('rockets')
@@ -27,29 +26,24 @@ export default class RocketsTableData extends DataBase {
 
   public async populateRocketsTable(){
     const rocketData = await new AxiosServices().getRocketsData();
-    if (!rocketData) return new MessageErrorsController().getErrorMessage('EMPTY_RESPONSE_FOR_ROCKETS_NAME_DATA_GRAB');
-    return await this.insertNewRockets(rocketData)
-      .then((result: [] | string[]) => {
-        if (result.length !== 0) {
-          console.log('Failure in inserting the following rocket data: ', result);
-          return 'partial';
-        }
-      });
+    if (!rocketData) return new MessageErrorsController().getErrorMessage('EMPTY_RESPONSE_FOR_ROCKETS_DATA_GRAB');
+    const result = await this.insertNewRockets(rocketData);
+
+    if (result.length !== 0) {
+      console.log('Failure in inserting the following rocket data: ', result);
+      return 'partial';
+    }
+
+    return result;
   }
 
-  public async updateRocketsTable(){
-    const rocketData = await new AxiosServices().getRocketsData();
-    if (!rocketData) return new MessageErrorsController().getErrorMessage('EMPTY_RESPONSE_FOR_ROCKETS_NAME_DATA_GRAB');
-    return await this.insertNewRockets(rocketData)
-      .then((result: [] | string[]) => {
-        if (result.length !== 0) {
-          console.log('Failure in inserting the following rocket data: ', result);
-          return 'partial';
-        }
-      });
+  public async updateRocketsTable(rocketData: any){
+    const searchForRocketData = await this.connection().table('rockets').select('*').where('rocket_id', '=', rocketData.rocket_id);
+    if (searchForRocketData[0]) return searchForRocketData;
+    return await this.connection().table('rockets').insert(rocketData);
   }
 
-  private async insertNewRockets(rocketData: rocketDataInfo[]): Promise<string[] | []>{
+  private async insertNewRockets(rocketData: rocketDataInfo[][]): Promise<string[] | []>{
     const arrayOfResults: string[] = [];
     try {
       const arrayOfPromises = rocketData.map(async rocketData => {

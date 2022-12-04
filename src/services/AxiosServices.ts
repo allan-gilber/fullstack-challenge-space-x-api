@@ -9,7 +9,7 @@ export class AxiosServices {
   private actualPage = 0;
   private loopController = true;
 
-  public async getRocketsData(): Promise<rocketDataInfo[] | []>{
+  public async getRocketsData(): Promise<rocketDataInfo[][] | []>{
     const arrayOfPromises: any[] = [];
 
     do {

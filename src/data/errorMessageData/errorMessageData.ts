@@ -12,5 +12,5 @@ export const errorMessagesData: errorMessageObject  = {
   ROCKETS_TABLE_ALREADY_EXISTS: {message: 'createRocketsTable: failure to created new table (table already exists). Proceeding to next task...'},
   LAUNCHES_TABLE_ALREADY_EXISTS: {message: 'createLaunchesTable: failure to created new table (table already exists). Proceeding to next task...'},
   // Populate errors
-  EMPTY_RESPONSE_FOR_ROCKETS_NAME_DATA_GRAB: {message: 'populateRocketsTable: request returned empty. Third-party API may be offline.'}
+  EMPTY_RESPONSE_FOR_ROCKETS_DATA_GRAB: {message: 'populateRocketsTable: request returned empty. Third-party API may be offline.'}
 };

@@ -1,6 +1,5 @@
 import cron from 'node-cron';
 import {AxiosServices} from '../../services/AxiosServices';
-import nodeJsCron from '../../services/nodeJsCron';
 
 export default class CronController {
   private cronService: any;

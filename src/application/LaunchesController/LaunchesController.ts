@@ -56,7 +56,7 @@ export class LaunchesController extends DataBase {
       const arrayOfAvailableYears = await new  LaunchesBusiness().getListOfYearAndRocketName();
 
       response.status(200).send({
-        teste: arrayOfAvailableYears
+        results: arrayOfAvailableYears
       });
     } catch (error: any){
       const messageController = new MessageErrorsController();

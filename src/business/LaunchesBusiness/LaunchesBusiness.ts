@@ -1,5 +1,4 @@
 import {Request, Response} from 'express';
-import {promisify} from 'util';
 import LaunchesData from '../../data/LaunchesData/LaunchesData';
 import RocketsData from '../../data/RocketsData/RocketsData';
 import {launchesRequestParameters, launchesStats} from '../../models/launchesInfoModel';

@@ -1,4 +1,4 @@
-import errorMessageBusiness from '../../business/errorBusiness/ErrorMessageBusiness';
+import errorMessageBusiness from '../../business/ErrorBusiness/ErrorMessageBusiness';
 import {errorMessage, externalErrorMessage} from '../../models/errorMessageModels';
 
 /** This class is used to get the error message from the errorMessageBusiness class.

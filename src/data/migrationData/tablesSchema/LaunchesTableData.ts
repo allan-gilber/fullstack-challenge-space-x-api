@@ -84,4 +84,10 @@ export default class LaunchesTableData extends DataBase {
     }
     return arrayOfResults;
   }
+
+  public async updateLaunchesTable(launchData: any){
+    const searchForLaunchData = await this.connection().table('launches').select('*').where('launch_id', '=', launchData.launch_id);
+    if (searchForLaunchData[0]) return searchForLaunchData;
+    return await this.connection().table('launches').insert(launchData);
+  }
 }

@@ -27,7 +27,19 @@ export default class RocketsTableData extends DataBase {
 
   public async populateRocketsTable(){
     const rocketData = await new AxiosServices().getRocketsData();
-    if (!rocketData) return new MessageErrorsController().getErrorMessage('EMPTY_RESPONSE_FOR_ROCKETS_DATA_GRAB');
+    if (!rocketData) return new MessageErrorsController().getErrorMessage('EMPTY_RESPONSE_FOR_ROCKETS_NAME_DATA_GRAB');
+    return await this.insertNewRockets(rocketData)
+      .then((result: [] | string[]) => {
+        if (result.length !== 0) {
+          console.log('Failure in inserting the following rocket data: ', result);
+          return 'partial';
+        }
+      });
+  }
+
+  public async updateRocketsTable(){
+    const rocketData = await new AxiosServices().getRocketsData();
+    if (!rocketData) return new MessageErrorsController().getErrorMessage('EMPTY_RESPONSE_FOR_ROCKETS_NAME_DATA_GRAB');
     return await this.insertNewRockets(rocketData)
       .then((result: [] | string[]) => {
         if (result.length !== 0) {

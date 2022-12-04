@@ -1,5 +1,5 @@
 import PopulationBusiness from '../../business/migrationBusiness/PopulationBusiness';
-import TableSchemaBusiness from '../../business/migrationBusiness/tableSchemaBusiness';
+import TableSchemaBusiness from '../../business/migrationBusiness/TableSchemaBusiness';
 import DataBase from '../../services/DataBase';
 import MessageErrorsController from '../MessageErrorsController/MessageErrorsController';
 
@@ -12,11 +12,12 @@ export class MigrationController extends DataBase {
       const tableSchemaBuilder = new TableSchemaBusiness();
       await tableSchemaBuilder.createRocketsTableSchema();
       await tableSchemaBuilder.createLaunchesTableSchema();
-      console.log('Fnished table Schema creation.');
+      console.log('Finished table Schema creation.');
 
 
       // Populating tables
       const populator = new PopulationBusiness();
+      console.log('Starting table population logic...');
       await populator.populateRocketsTable()
         .then(async result => {
           if (result === 'partial'){console.log('Finished populating rockets table with some errors.');}

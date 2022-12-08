@@ -5,7 +5,7 @@ import ApplicationBusiness from './business/ApplicationBusiness/ApplicationBusin
 
 // GET
 /* Simple endpoint to verify if server is online */
-ApplicationBusiness.get('/', async (request: Request, response: Response) => await response.status(200).send({message: 'Fullstack Challenge 🏅 - Space X API'}));
+ApplicationBusiness.get('/', (request: Request, response: Response) => response.status(200).send({message: 'Fullstack Challenge 🏅 - Space X API'}));
 
 /* Search with parameters that returns a list of launches that correspond to the parameters arguments */
 ApplicationBusiness.get('/launches', async (request: Request,response: Response) => await new LaunchesController().getLaunchesList(request, response));

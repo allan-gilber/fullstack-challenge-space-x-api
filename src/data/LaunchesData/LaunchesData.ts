@@ -38,6 +38,6 @@ export default class LaunchesData extends DataBase {
 
   public async getListOfLaunchesByDate(rocketId: string) {
     return await this.connection().table('launches')
-      .select('launches.date_utc').where('launch_rocket_id', '=', rocketId);
+      .select('date_utc').orderBy('date_utc', 'asc').where('launch_rocket_id', '=', rocketId);
   }
 }

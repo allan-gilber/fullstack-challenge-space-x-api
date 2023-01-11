@@ -32,7 +32,7 @@ export class LaunchesController extends DataBase {
       const successAndFailuresStats: launchesStats = await new LaunchesBusiness().getLaunchesSuccessAndFailureStatsSummary();
 
       response.status(200).send({
-        docs: arrayOfLaunchesStatsByRocket,
+        results: arrayOfLaunchesStatsByRocket,
         success: successAndFailuresStats.success,
         failures: successAndFailuresStats.failures,
         total: successAndFailuresStats.total

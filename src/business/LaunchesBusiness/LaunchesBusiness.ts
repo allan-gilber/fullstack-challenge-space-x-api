@@ -19,7 +19,7 @@ export default class LaunchesBusiness {
 
     const dataValidator = new DataValidatorBusiness();
 
-    if (request.query?.search) searchParameters = request.query.search.toString();
+    if (request.query?.search) searchParameters = request.query.search.toString().trim();
     if (request.query?.limit){
       if (!dataValidator.checkIfStringHasOnlyNumbers(request.query.limit.toString()))  throw 'invalidParametersForLaunchesList';
       limit = Number(request.query.limit);

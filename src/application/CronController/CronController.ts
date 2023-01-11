@@ -11,6 +11,8 @@ export default class CronController {
   constructor(){
     this.cronService = cron;
     this.cronExpression = '0 9 * * *';
+    // For testing purposes
+    // this.cronExpression = '* * * * *';
   }
 
   public async startCronService(){
